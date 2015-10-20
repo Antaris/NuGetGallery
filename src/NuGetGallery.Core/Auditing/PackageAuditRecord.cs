@@ -42,7 +42,7 @@ namespace NuGetGallery.Auditing
             return String.Format(
                 "{0}/{1}",
                 Id.ToLowerInvariant(), 
-                SemanticVersionExtensions.Normalize(Version).ToLowerInvariant());
+                NuGetVersionExtensions.Normalize(Version).ToLowerInvariant());
         }
     }
 

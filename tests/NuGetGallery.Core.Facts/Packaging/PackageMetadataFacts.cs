@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -12,31 +12,30 @@ using Xunit;
 
 namespace NuGetGallery.Packaging
 {
-    public class NupkgRewriterFacts
+    public class PackageMetadataFacts
     {
         [Fact]
-        public static void CanRewriteTheNuspecInANupkg()
+        public static void CanReadBasicMetadataProperties()
         {
             var packageStream = CreateTestPackageStream();
+            var nupkg = new PackageReader(packageStream, leaveStreamOpen: false);
+            var nuspec = nupkg.GetNuspecReader();
 
             // Act
-            NupkgRewriter.RewriteNupkgManifest(packageStream,
-                    new List<Action<ManifestEdit>>
-                    {
-                        metadata => { metadata.Authors = "Me and You"; },
-                        metadata => { metadata.Tags = "Peas In A Pod"; }
-                    });
+            var packageMetadata = PackageMetadata.FromNuspecReader(nuspec);
 
             // Assert
-            using (var nupkg = new PackageReader(packageStream, leaveStreamOpen: false))
-            {
-                var nuspec = nupkg.GetNuspecReader();
-
-                Assert.Equal("TestPackage", nuspec.GetId());
-                Assert.Equal(NuGetVersion.Parse("0.0.0.1"), nuspec.GetVersion());
-                Assert.Equal("Me and You", nuspec.GetMetadata().First(kvp => kvp.Key == "authors").Value);
-                Assert.Equal("Peas In A Pod", nuspec.GetMetadata().First(kvp => kvp.Key == "tags").Value);
-            }
+            Assert.Equal("TestPackage", packageMetadata.Id);
+            Assert.Equal(NuGetVersion.Parse("0.0.0.1"), packageMetadata.Version);
+            Assert.Equal("Package A", packageMetadata.Title);
+            Assert.Equal(2, packageMetadata.Authors.Count);
+            Assert.Equal("ownera, ownerb", packageMetadata.Owners);
+            Assert.False(packageMetadata.RequireLicenseAcceptance);
+            Assert.Equal("package A description.", packageMetadata.Description);
+            Assert.Equal("en-US", packageMetadata.Language);
+            Assert.Equal("http://www.nuget.org/", packageMetadata.ProjectUrl.ToString());
+            Assert.Equal("http://www.nuget.org/", packageMetadata.IconUrl.ToString());
+            Assert.Equal("http://www.nuget.org/", packageMetadata.LicenseUrl.ToString());
         }
 
         private static Stream CreateTestPackageStream()
@@ -58,6 +57,9 @@ namespace NuGetGallery.Packaging
                         <requireLicenseAcceptance>false</requireLicenseAcceptance>
                         <description>package A description.</description>
                         <language>en-US</language>
+                        <projectUrl>http://www.nuget.org/</projectUrl>
+                        <iconUrl>http://www.nuget.org/</iconUrl>
+                        <licenseUrl>http://www.nuget.org/</licenseUrl>
                         <dependencies />
                       </metadata>
                     </package>");

@@ -246,7 +246,7 @@ namespace NuGetGallery.DataServices
                 }
                 else if (memberSide.Member == _versionMember)
                 {
-                    return Tuple.Create(Target.Version, SemanticVersionExtensions.Normalize((string)constSide.Value));
+                    return Tuple.Create(Target.Version, NuGetVersionExtensions.Normalize((string)constSide.Value));
                 }
                 else if (memberSide.Member == _idMember)
                 {
