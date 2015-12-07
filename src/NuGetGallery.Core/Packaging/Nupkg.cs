@@ -321,5 +321,36 @@ namespace NuGetGallery.Packaging
 
             return new MemoryStream(safeBytes, 0, bytesRead);
         }
+
+
+
+        public Stream GetFileStream(string filePath)
+        {
+            if (filePath.StartsWith("\\"))
+            {
+                filePath = filePath.Substring(1);
+            }
+            filePath = filePath.Replace("\\", "/");
+
+            using (var za = new ZipArchive(GetStream(), ZipArchiveMode.Read, true))
+            {
+                var entry = za.GetEntry(filePath);
+                if (entry == null)
+                {
+                    return null;
+                }
+
+                var memoryStream = new MemoryStream();
+
+                using (var entryStream = entry.Open())
+                {
+                    entryStream.CopyTo(memoryStream);
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                return memoryStream;
+            }
+        }
     }
 }

@@ -14,7 +14,7 @@ using System.Web.Routing;
 using System.Web.UI;
 using Elmah;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-using Microsoft.WindowsAzure.Diagnostics;
+//using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using NuGetGallery;
 using NuGetGallery.Configuration;
@@ -114,7 +114,7 @@ namespace NuGetGallery
 
         private static void CloudPreStart()
         {
-            Trace.Listeners.Add(new DiagnosticMonitorTraceListener());
+            //Trace.Listeners.Add(new DiagnosticMonitorTraceListener());
         }
 
         private static void BundlingPostStart()

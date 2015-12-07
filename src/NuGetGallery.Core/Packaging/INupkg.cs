@@ -41,5 +41,7 @@ namespace NuGetGallery.Packaging
         Stream GetStream();
 
         IEnumerable<System.Runtime.Versioning.FrameworkName> GetSupportedFrameworks();
+
+        Stream GetFileStream(string filePath);
     }
 }

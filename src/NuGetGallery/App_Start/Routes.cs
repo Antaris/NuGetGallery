@@ -26,6 +26,7 @@ namespace NuGetGallery
                 new { controller = "Pages", action = "EmptyHome" });
             }
             Routes.RegisterApiV2Routes(routes);
+            Routes.RegisterExtensionRoutes(routes);
         }
 
         public static void RegisterUIRoutes(RouteCollection routes)
@@ -454,6 +455,21 @@ namespace NuGetGallery
                 RouteName.V2ApiFeed,
                 "api/v2/",
                 typeof(V2Feed));
+        }
+
+        public static void RegisterExtensionRoutes(RouteCollection routes)
+        {
+            routes.MapRoute(
+                "ExtensionV1Feed",
+                "api/extensions/v1/feed",
+                new { controller = "Extensions", action = "Feed" }
+            );
+
+            routes.MapRoute(
+                "ExtensionV1Content",
+                "api/extensions/v1/{id}/{version}",
+                new { controller = "Extensions", action = "VsixContent" }
+            );
         }
     }
 }
